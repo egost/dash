@@ -5,7 +5,8 @@ import pandas as pd
 import plotly.graph_objs as go
 
 
-app = dash.Dash()
+app = dash.Dash(__name__)
+server = app.server
 
 
 # Prep Input Data
@@ -123,4 +124,4 @@ def update_figure(ride_name, date_checklist):
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=False)
