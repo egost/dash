@@ -32,3 +32,4 @@ Forgetful
 Material
 Half
 Hissing
+Crazy
