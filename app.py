@@ -1,4 +1,5 @@
 import time
+import os
 
 
 import dash
@@ -6,6 +7,8 @@ import dash_core_components as dcc
 import dash_html_components as html
 import pandas as pd
 import plotly.graph_objs as go
+from sqlalchemy import create_engine
+
 
 external_stylesheets = [
         'https://fonts.googleapis.com/css?family=Raleway:400,300,600',
@@ -20,30 +23,16 @@ yellow = '#FEBE10'
 
 # Prep Input Data
 
-def silly_names(df):
-    """Replaces copyrighted names with fake names."""
+DATABASE_USER = os.environ.get("DB_USER", '')
+DATABASE_PASSWORD = os.environ.get("DB_PASSWORD", '')
+DATABASE_URL = os.environ.get("DB_URL", '')
+DATABASE_NAME = os.environ.get("DB_NAME", '')
 
-    def random_names():
-        """Concatenates a list of names."""
+host = "mysql://{}:{}@{}/{}".format(DATABASE_USER,DATABASE_PASSWORD,DATABASE_URL,DATABASE_NAME)
+engine = create_engine(host)
 
-        animals = list(pd.read_fwf('resources/animals.txt').values)
-        adjectives = list(pd.read_fwf('resources/adjectives.txt').values)
-        names = []
-        for i in range(0, len(animals)):
-            names.append(str(adjectives[i][0] + ' ' + animals[i][0]))
-        return names
-
-    silly_names = random_names()
-    for original, silly in zip(df['ride_name'].unique(), random_names()):
-        df['ride_name'] = df['ride_name'].replace(original, silly)
-
-    return df
-
-
-df = pd.read_csv('resources/dataframe.csv')
+df = pd.read_sql('rides', con=engine)
 df['date']  = pd.to_datetime(df['date'])
-df = silly_names(df)
-
 
 # Useful Variables
 dates = df['date'].map(pd.Timestamp.date).unique()
