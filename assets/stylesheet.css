@@ -14,6 +14,10 @@ h3 {
                  0px 18px 23px rgba(0,0,0,0.1);
 }
 
+.row {
+    text-size=1.2vw;
+}
+
 #seasons-daily-ride-throughput {
     margin-top: -8%;
     margin-left: -5%;
